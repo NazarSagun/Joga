@@ -225,6 +225,11 @@ header ul li:before {
   font-weight: 300;
   padding-right: 20px;
 }
+
+.main-modal {
+  display: none;
+}
+
 .content .info-tabcontent .description-btn {
   width: 180px;
   height: 45px;
@@ -716,4 +721,9 @@ header ul li:before {
 }
 .overlay .popup-form__btn:hover {
   box-shadow: 0 0 10px #c78030;
+}
+
+.status {
+  color: blue;
+  background-color: black;
 }
