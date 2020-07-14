@@ -1,12 +1,12 @@
-window.addEventListener('DOMContentLoaded', function(){
+window.addEventListener('DOMContentLoaded', function() {
 
     'use strict';
-    let tab = document.querySelectorAll('.info-header-tab');
-    let info = document.querySelector('.info-header');
-    let tabContent = document.querySelectorAll('.info-tabcontent');
+    let tab = document.querySelectorAll('.info-header-tab'),
+        info = document.querySelector('.info-header'),
+        tabContent = document.querySelectorAll('.info-tabcontent');
 
     function hideTabContent(a) {
-        for (let i = a; i < tabContent.length; i++){
+        for (let i = a; i < tabContent.length; i++) {
             tabContent[i].classList.remove('show');
             tabContent[i].classList.add('hide');
         }
@@ -15,28 +15,29 @@ window.addEventListener('DOMContentLoaded', function(){
     hideTabContent(1);
 
     function showTabContent(b) {
-        if (tabContent[b].classList.contains('hide')){
+        if (tabContent[b].classList.contains('hide')) {
             tabContent[b].classList.remove('hide');
             tabContent[b].classList.add('show');
         }
     }
 
-    info.addEventListener('click', function(event){
+    info.addEventListener('click', function(event) {
         let target = event.target;
-        if (target && target.classList.contains('info-header-tab')){
-            for (let i = 0; i < tab.length; i++){
-                if (target == tab[i]){
+        if (target && target.classList.contains('info-header-tab')) {
+            for(let i = 0; i < tab.length; i++) {
+                if (target == tab[i]) {
                     hideTabContent(0);
                     showTabContent(i);
                     break;
                 }
             }
         }
+
     });
 
-    // Timer
+    // Timer 
 
-    let deadline = '2020-06-25';
+    let deadline = '2018-11-21';
 
     function getTimeRemaining(endtime) {
         let t = Date.parse(endtime) - Date.parse(new Date()),
@@ -63,10 +64,10 @@ window.addEventListener('DOMContentLoaded', function(){
             let t = getTimeRemaining(endtime);
 
             function addZero(num){
-                if(num <= 9) {
-                    return '0' + num;
-                 } else return num;
-            }
+                        if(num <= 9) {
+                            return '0' + num;
+                        } else return num;
+                    };
 
             hours.textContent = addZero(t.hours);
             minutes.textContent = addZero(t.minutes);
@@ -88,8 +89,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
     let more = document.querySelector('.more'),
         overlay = document.querySelector('.overlay'),
-        close = document.querySelector('.popup-close'),
-        descriptionBtn = document.querySelector('.description-btn');
+        close = document.querySelector('.popup-close');
 
     more.addEventListener('click', function() {
         overlay.style.display = 'block';
@@ -99,83 +99,56 @@ window.addEventListener('DOMContentLoaded', function(){
 
     close.addEventListener('click', function() {
         overlay.style.display = 'none';
-        more.classList.remove('more-splash'); 
+        more.classList.remove('more-splash');
         document.body.style.overflow = '';
     });
 
-    descriptionBtn.addEventListener('click', function() {
-        overlay.style.display = 'block';
-        this.classList.add('more-splash');
-        document.body.style.overflow = 'hidden';
-    });
-
-    // Form
+     // Form
 
     let message = {
         loading: 'Loading...',
         success: 'Thanks! We will contact you soon!',
-        failure: 'Something went wrong...'
+        failure: 'Something went wrong'
     };
 
     let form = document.querySelector('.main-form'),
-        formBotton = document.getElementById('form'),
         input = form.getElementsByTagName('input'),
         statusMessage = document.createElement('div');
+
         statusMessage.classList.add('status');
 
-    function sendForm(elem){    
-        elem.addEventListener('submit', function(event) {
-            event.preventDefault();
-                elem.appendChild(statusMessage);
-                let formData = new FormData(elem);
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        form.appendChild(statusMessage);
 
-                function postData(data){
+        let request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 
-                    return new Promise(function(resolve,reject){
-                        let request = new XMLHttpRequest();
+        let formData = new FormData(form);
 
-                        request.open('POST', 'server.php');
-
-                        request.setRequestHeader ('Content-Type', 'application/x-www-form-urlencoded');
-
-                        request.onreadystatechange = function() {
-                            if (request.readyState < 4) {
-                                resolve();
-                            } else if (request.readyState === 4) {
-                                if (request.status == 200 && request.status < 300) {
-                                    resolve();
-                                }
-                                else {
-                                    reject();
-                                }
-                            }
-                        };
-
-                        request.send(data);
-                    });
-                
-                } //End postData
-
-                function clearInput() {
-                    for (let i = 0; i < input.length; i++) {
-                        input[i].value = '';
-                    }
-                }
-
-                postData(formData)
-                    .then(()=> statusMessage.innerHTML = message.loading)
-                    .then(()=> {
-                        thanksModal.style.display = 'block';
-                        mainModal.style.display = 'none';
-                        statusMessage.innerHTML = '';
-                    })
-                    .catch(()=> statusMessage.innerHTML = message.failure)
-                    .then(clearInput);
+        let obj = {};
+        formData.forEach(function(value, key) {
+            obj[key] = value;
         });
-    }
+        let json = JSON.stringify(obj);
 
-    sendForm(form);
-    sendForm(formBotton);
+        request.send(json);
+
+        request.addEventListener('readystatechange', function() {
+            if (request.readyState < 4) {
+                statusMessage.innerHTML = message.loading;
+            } else if(request.readyState === 4 && request.status == 200) {
+                statusMessage.innerHTML = message.success;
+            } else {
+                statusMessage.innerHTML = message.failure;
+            }
+        });
+
+        for (let i = 0; i < input.length; i++) {
+            input[i].value = '';
+        }
+    });
 
     // Slider
 
@@ -185,8 +158,9 @@ window.addEventListener('DOMContentLoaded', function(){
         next = document.querySelector('.next'),
         dotsWrap = document.querySelector('.slider-dots'),
         dots = document.querySelectorAll('.dot');
-    
+
     showSlides(slideIndex);
+
     function showSlides(n) {
 
         if (n > slides.length) {
@@ -203,32 +177,30 @@ window.addEventListener('DOMContentLoaded', function(){
         dots[slideIndex - 1].classList.add('dot-active');
     }
 
-    function moveSlides(n) {
-        showSlides(slideIndex += n);
+    function plusSlides(n) {
+        showSlides(slideIndex += n); 
     }
     function currentSlide(n) {
         showSlides(slideIndex = n);
     }
 
     prev.addEventListener('click', function() {
-        moveSlides(-1);
+        plusSlides(-1);
     });
 
     next.addEventListener('click', function() {
-        moveSlides(1);
+        plusSlides(1);
     });
 
     dotsWrap.addEventListener('click', function(event) {
         for (let i = 0; i < dots.length + 1; i++) {
-            let target = event.target;
-
-            if (target.classList.contains('dot') && target == dots[i-1]) {
+            if (event.target.classList.contains('dot') && event.target == dots[i-1]) {
                 currentSlide(i);
             }
         }
     });
 
-    //Calc
+    // Calc
 
     let persons = document.querySelectorAll('.counter-block-input')[0],
         restDays = document.querySelectorAll('.counter-block-input')[1],
@@ -244,10 +216,10 @@ window.addEventListener('DOMContentLoaded', function(){
         personsSum = +this.value;
         total = (daysSum + personsSum)*4000;
 
-        if (restDays.value == '') {
+        if(restDays.value == '') {
             totalValue.innerHTML = 0;
-        }else {
-           totalValue.innerHTML = total;
+        } else {
+            totalValue.innerHTML = total;
         }
     });
 
@@ -255,9 +227,9 @@ window.addEventListener('DOMContentLoaded', function(){
         daysSum = +this.value;
         total = (daysSum + personsSum)*4000;
 
-        if (persons.value == '') {
+        if(persons.value == '') {
             totalValue.innerHTML = 0;
-        }else {
+        } else {
             totalValue.innerHTML = total;
         }
     });
@@ -270,5 +242,5 @@ window.addEventListener('DOMContentLoaded', function(){
             totalValue.innerHTML = a * this.options[this.selectedIndex].value;
         }
     });
-    
+
 });
