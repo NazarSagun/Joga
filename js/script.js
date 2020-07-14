@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', function() {
                         if(num <= 9) {
                             return '0' + num;
                         } else return num;
-                    };
+                    }
 
             hours.textContent = addZero(t.hours);
             minutes.textContent = addZero(t.minutes);
@@ -89,13 +89,22 @@ window.addEventListener('DOMContentLoaded', function() {
 
     let more = document.querySelector('.more'),
         overlay = document.querySelector('.overlay'),
-        close = document.querySelector('.popup-close');
+        close = document.querySelector('.popup-close'),
+        description = document.getElementsByClassName('description-btn');
+
+    for (let i = 0; i < description.length; i++) {
+        description[i].onclick = function() {
+            overlay.style.display = 'block';
+            this.classList.add('more-splash');
+            document.body.style.overflow = 'hidden';
+        };
+    }
 
     more.addEventListener('click', function() {
         overlay.style.display = 'block';
         this.classList.add('more-splash');
         document.body.style.overflow = 'hidden';
-    });
+    });  
 
     close.addEventListener('click', function() {
         overlay.style.display = 'none';
