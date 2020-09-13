@@ -251,5 +251,15 @@ window.addEventListener('DOMContentLoaded', function() {
             totalValue.innerHTML = a * this.options[this.selectedIndex].value;
         }
     });
+    
+    ScrollReveal().reveal('.header', { rotate: {x: 100}, duration: 1000 });
+    ScrollReveal().reveal('.info', { scale: 0.85, duration: 1000 });
+    ScrollReveal().reveal('.timer', { scale: 0.85, duration: 1000 });
+    ScrollReveal().reveal('.more', { scale: 0.85, duration: 1000 });
+    ScrollReveal().reveal('.slider', { scale: 0.85, duration: 1000 });
+    ScrollReveal().reveal('.counter', { scale: 0.85, duration: 1000 });
+    ScrollReveal().reveal('.contact', { scale: 0.85, duration: 1000 });
+    ScrollReveal().reveal('.social', { scale: 0.85, duration: 1000 });
+    ScrollReveal().reveal('.main-block', { scale: 0.85, duration: 1000 });
 
 });
